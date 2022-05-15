@@ -15,7 +15,6 @@
  * Constructs a new VirtualMachine object from the name of the input binary file.
  *
  * @param filename  The name of the binary file.
- * @return          None.
  * @throws          std::invalid_argument if the parser fails to read the file.
  *
  */
@@ -35,8 +34,6 @@ VirtualMachine::VirtualMachine(const char* filename){
  * Copies the fields of a VirtualMachine object to a new object.
  * 
  * @param vm  The VirtualMachine object to copy from.
- * @return    None.
- * @throws    None.
  *
  */
 VirtualMachine::VirtualMachine(const VirtualMachine &vm) noexcept {
@@ -48,7 +45,6 @@ VirtualMachine::VirtualMachine(const VirtualMachine &vm) noexcept {
  *
  * @param vm  The VirtualMachine object to copy from.
  * @return    The current object.
- * @throws    None.
  *
  */
 VirtualMachine & VirtualMachine::operator=(const VirtualMachine &vm) noexcept {
@@ -63,9 +59,6 @@ VirtualMachine & VirtualMachine::operator=(const VirtualMachine &vm) noexcept {
 /**
  * Deletes and dynamically-allocated memory stored in this object.
  *
- * @return  None.
- * @throws  None.
- *
  */
 VirtualMachine::~VirtualMachine() noexcept {
 	delete [] stack_;
@@ -76,8 +69,6 @@ VirtualMachine::~VirtualMachine() noexcept {
  * Copies the fields of a VirtualMachine object to the current object.
  *
  * @param vm  The VirtualMachine object to copy from.
- * @return    None.
- * @throws    None.
  *
  */
 void VirtualMachine::copy(const VirtualMachine &vm) noexcept {
