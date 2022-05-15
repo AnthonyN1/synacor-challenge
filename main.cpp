@@ -8,9 +8,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "parser.h"
+#include "virtual_machine.h"
 
-const unsigned int MEMORY_SIZE = (1 << 15);
 
 
 int main(int argc, char** argv){
@@ -22,19 +21,14 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
-	// Reads the program into memory.
-	uint16_t memory[MEMORY_SIZE];
+	// Creates a new VirtualMachine.
 	try{
-		Parser::readBinaryFile(argv[1], memory);
+		VirtualMachine vm(argv[1]);
 	} catch(const std::invalid_argument &e){
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}
 
-	for(unsigned int i = 0; i < MEMORY_SIZE; ++i){
-		std::cout << memory[i] << "\n";
-	}
-	std::cout << std::endl;
 	
 	return 0;
 }
