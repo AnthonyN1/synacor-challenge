@@ -21,28 +21,49 @@
 void VirtualMachine::start(){
 	while(programCounter_ < MEMORY_SIZE){
 		switch(memory_[programCounter_]){
-			case 0: stopExecution(); break;
-			case 1: setReg(memory_[programCounter_ + 1] - START_REG, getValue(memory_[programCounter_ + 2])); programCounter_ += 3; break;
-			case 2: push(getValue(memory_[programCounter_ + 1])); programCounter_ += 2; break;
-			case 3: setReg(memory_[programCounter_ + 1] - START_REG, getValue(pop())); programCounter_ += 2; break;
-			case 4: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) == getValue(memory_[programCounter_ + 3])) ? 1 : 0); programCounter_ += 4; break;
-			case 5: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) > getValue(memory_[programCounter_ + 3])) ? 1 : 0); programCounter_ += 4; break;
-			case 6: programCounter_ = getValue(memory_[programCounter_ + 1]); break;
-			case 7: if(getValue(memory_[programCounter_ + 1]) != 0){ programCounter_ = getValue(memory_[programCounter_ + 2]); } else{ programCounter_ += 3; } break;
-			case 8: if(getValue(memory_[programCounter_ + 1]) == 0){ programCounter_ = getValue(memory_[programCounter_ + 2]); } else{ programCounter_ += 3; } break;
-			case 9: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) + getValue(memory_[programCounter_ + 3])) % START_REG); programCounter_ += 4; break;
-			case 10: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) * getValue(memory_[programCounter_ + 3])) % START_REG); programCounter_ += 4; break;
-			case 11: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) % getValue(memory_[programCounter_ + 3])) % START_REG); programCounter_ += 4; break;
-			case 12: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) & getValue(memory_[programCounter_ + 3])) % START_REG); programCounter_ += 4; break;
-			case 13: setReg(memory_[programCounter_ + 1] - START_REG, (getValue(memory_[programCounter_ + 2]) | getValue(memory_[programCounter_ + 3])) % START_REG); programCounter_ += 4; break;
-			case 14: setReg(memory_[programCounter_ + 1] - START_REG, (~getValue(memory_[programCounter_ + 2])) % START_REG); programCounter_ += 3; break;
-			case 15: setReg(memory_[programCounter_ + 1] - START_REG, (memory_[getValue(memory_[programCounter_ + 2])]) % START_REG); programCounter_ += 3; break;
-			case 16: writeMem(getValue(memory_[programCounter_ + 1]), getValue(memory_[programCounter_ + 2])); programCounter_ += 3; break;
-			case 17: push(programCounter_ + 2); programCounter_ = getValue(memory_[programCounter_ + 1]); break;
-			case 18: programCounter_ = getValue(pop()); break;
-			case 19: outputASCII(getValue(memory_[programCounter_ + 1])); programCounter_ += 2; break;
+			// Opcode 0: stops execution and terminates the program.
+			case 0: std::cout << "Program terminating..." << std::endl; exit(0);
+			// Opcode 1: sets register <a> to the value of <b>.
+			case 1: setReg(1, getValueAt(2)); programCounter_ += 3; break;
+			// Opcode 2: pushes <a> onto the stack.
+			case 2: push(getValueAt(1)); programCounter_ += 2; break;
+			// Opcode 3: removes the top element from the stack and writes it into <a>.
+			case 3: setReg(1, pop()); programCounter_ += 2; break;
+			// Opcode 4: sets <a> to 1 if <b> is equal to <c>, 0 otherwise.
+			case 4: setReg(1, (getValueAt(2) == getValueAt(3)) ? 1 : 0); programCounter_ += 4; break;
+			// Opcode 5: sets <a> to 1 if <b> is greater than <c>, 0 otherwise.
+			case 5: setReg(1, (getValueAt(2) > getValueAt(3)) ? 1 : 0); programCounter_ += 4; break;
+			// Opcode 6: jumps to <a>
+			case 6: programCounter_ = getValueAt(1); break;
+			// Opcode 7: if <a> is nonzero, jumps to <b>.
+			case 7: if(getValueAt(1) != 0){ programCounter_ = getValueAt(2); } else{ programCounter_ += 3; } break;
+			// Opcode 8: if <a> is zero, jumps to <b>.
+			case 8: if(getValueAt(1) == 0){ programCounter_ = getValueAt(2); } else{ programCounter_ += 3; } break;
+			// Opcode 9: stores into <a> the sum of <b> and <c>.
+			case 9: setReg(1, (getValueAt(2) + getValueAt(3)) % START_REG); programCounter_ += 4; break;
+			// Opcode 10: stores into <a> the product of <b> and <c>.
+			case 10: setReg(1, (getValueAt(2) * getValueAt(3)) % START_REG); programCounter_ += 4; break;
+			// Opcode 11: stores into <a> the remainder of <b> divided by <c>.
+			case 11: setReg(1, getValueAt(2) % getValueAt(3)); programCounter_ += 4; break;
+			// Opcode 12: stores into <a> the bitwise AND of <b> and <c>.
+			case 12: setReg(1, getValueAt(2) & getValueAt(3)); programCounter_ += 4; break;
+			// Opcode 13: stores into <a> the bitwise OR of <b> and <c>.
+			case 13: setReg(1, getValueAt(2) | getValueAt(3)); programCounter_ += 4; break;
+			// Opcode 14: stores into <a> the bitwise NOT of <b>.
+			case 14: setReg(1, (~getValueAt(2)) % START_REG); programCounter_ += 3; break;
+			// Opcode 15: stores into <a> the value at memory address <b>.
+			case 15: setReg(1, (memory_[getValueAt(2)]) % START_REG); programCounter_ += 3; break;
+			// Opcode 16: writes the value from <b> to memory address <a>.
+			case 16: memory_[getValueAt(1)] = getValueAt(2); programCounter_ += 3; break;
+			// Opcode 17: writes the address of the next instruction to the stack, and jumps to <a>.
+			case 17: push(programCounter_ + 2); programCounter_ = getValueAt(1); break;
+			// Opcode 18: removes the top element from the stack and jumps to it.
+			case 18: programCounter_ = pop(); break;
+			// Opcode 19: outputs the character represented by ASCII code <a>.
+			case 19: std::cout << char(getValueAt(1)); programCounter_ += 2; break;
 			case 20:
 				break;
+			// Opcode 21: no operation.
 			case 21: programCounter_ += 1; break;
 			default: throw std::runtime_error("VM: unable to parse instruction.");
 		}
@@ -51,33 +72,28 @@ void VirtualMachine::start(){
 
 
 /**
+ * Gets the value stored at the memory address using the program counter offset.
+ * Returns either the literal value, or the value in the register.
  *
- * @param val  The literal or register.
- * @return     Either the literal value of val, or the value stored in the register val.
- * 
+ * @param pcOffset  The program counter positive offset.
+ * @return          Either the literal value of the value at the memory address, or the value stored in the register.
+ *
  */
-uint16_t VirtualMachine::getValue(uint16_t val) const noexcept {
+uint16_t VirtualMachine::getValueAt(unsigned pcOffset) const noexcept {
+	uint16_t val = memory_[programCounter_ + pcOffset];
 	return (val < START_REG) ? val : registers_[val - START_REG];
 }
 
 
 /**
- * Stops execution, and terminates the program.
+ * Sets the value of the register stored at the memory address using the program counter offset to val.
+ *
+ * @param pcOffset  The program counter positive offset.
+ * @param val       The value to write.
  *
  */
-void VirtualMachine::stopExecution() const noexcept {
-	std::cout << "Program terminating..." << std::endl;
-	exit(0);
-}
-
-/**
- * Sets the value of the register at regIdx to val.
- *
- * @param regIdx  The index of the register.
- * @param val     The value to write.
- *
- */
-void VirtualMachine::setReg(unsigned int regIdx, uint16_t val) noexcept {
+void VirtualMachine::setReg(unsigned int pcOffset, uint16_t val) noexcept {
+	unsigned int regIdx = memory_[programCounter_ + pcOffset] - START_REG;
 	registers_[regIdx] = val;
 }
 
@@ -94,7 +110,7 @@ void VirtualMachine::push(uint16_t val) noexcept {
 /**
  * Pops the top value off of the stack.
  *
- * @throws        std::out_of_range if the stack is empty.
+ * @throws  std::out_of_range if the stack is empty.
  *
  */
 uint16_t VirtualMachine::pop(){
@@ -105,29 +121,4 @@ uint16_t VirtualMachine::pop(){
 	uint16_t val = stack_.back();
 	stack_.pop_back();
 	return val;
-}
-
-/**
- * Sets the value of the memory address memIdx to val.
- * 
- * @param memIdx  The index of the memory space.
- * @param val     The value to write.
- * 
- */
-void VirtualMachine::writeMem(unsigned int memIdx, uint16_t val) noexcept {
-	memory_[memIdx] = val;
-}
-
-
-
-
-
-/**
- * Outputs the character represented by ASCII code val.
- *
- * @param val  The ASCII code of the character to output.
- *
- */
-void VirtualMachine::outputASCII(uint16_t val) const noexcept {
-	std::cout << char(val);
 }

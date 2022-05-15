@@ -30,14 +30,10 @@ class VirtualMachine{
 	private:
 		void copy(const VirtualMachine &vm) noexcept;
 
-		uint16_t getValue(uint16_t val) const noexcept;
-
-		void stopExecution() const noexcept;
-		void setReg(unsigned int regIdx, uint16_t val) noexcept;
+		uint16_t getValueAt(unsigned int pcOffset) const noexcept;
+		void setReg(unsigned int pcOffset, uint16_t val) noexcept;
 		void push(uint16_t val) noexcept;
 		uint16_t pop();
-		void writeMem(unsigned int memIdx, uint16_t val) noexcept;
-		void outputASCII(uint16_t val) const noexcept;
 
 
 		unsigned int programCounter_ = 0;          /** The memory index of the current instruction. */
