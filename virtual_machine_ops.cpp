@@ -33,7 +33,7 @@ void VirtualMachine::start(){
 			case 4: setReg(1, (getValueAt(2) == getValueAt(3)) ? 1 : 0); programCounter_ += 4; break;
 			// Opcode 5: sets <a> to 1 if <b> is greater than <c>, 0 otherwise.
 			case 5: setReg(1, (getValueAt(2) > getValueAt(3)) ? 1 : 0); programCounter_ += 4; break;
-			// Opcode 6: jumps to <a>
+			// Opcode 6: jumps to <a>.
 			case 6: programCounter_ = getValueAt(1); break;
 			// Opcode 7: if <a> is nonzero, jumps to <b>.
 			case 7: if(getValueAt(1) != 0){ programCounter_ = getValueAt(2); } else{ programCounter_ += 3; } break;
