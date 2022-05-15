@@ -21,7 +21,7 @@
  * @param filename  The name of the binary file.
  * @param memory    A pointer to a memory space for 16-bit values. Requires the array to be a 15-bit address space.
  * @return          None.
- * @throws          None.
+ * @throws          std::invalid_argument if filename is not the name of a file matching the above requirements.
  *
  */
 void Parser::readBinaryFile(const char* filename, uint16_t* memory){
