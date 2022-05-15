@@ -21,10 +21,11 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
-	// Creates a new VirtualMachine.
+	// Creates a new VirtualMachine, and starts it.
 	try{
 		VirtualMachine vm(argv[1]);
-	} catch(const std::invalid_argument &e){
+		vm.start();
+	} catch(const std::exception &e){
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}

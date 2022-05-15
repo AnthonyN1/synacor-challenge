@@ -12,6 +12,7 @@
 
 const unsigned int MEMORY_SIZE = (1 << 15);
 const unsigned int NUM_REGISTERS = 8;
+const unsigned int START_REG = 32768;
 
 
 /**
@@ -24,8 +25,19 @@ class VirtualMachine{
 		VirtualMachine(const char* filename);
 		VirtualMachine(const VirtualMachine &vm) noexcept;
 		VirtualMachine & operator=(const VirtualMachine &vm) noexcept;
+
+		void start();
 	private:
 		void copy(const VirtualMachine &vm) noexcept;
+
+		uint16_t getValue(uint16_t val) const noexcept;
+
+		void stopExecution() const noexcept;
+		void setReg(unsigned int regIdx, uint16_t val) noexcept;
+		void push(uint16_t val) noexcept;
+		uint16_t pop();
+		void writeMem(unsigned int memIdx, uint16_t val) noexcept;
+		void outputASCII(uint16_t val) const noexcept;
 
 
 		unsigned int programCounter_ = 0;          /** The memory index of the current instruction. */
