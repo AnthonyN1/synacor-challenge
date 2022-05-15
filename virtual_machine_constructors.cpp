@@ -1,7 +1,7 @@
 /*
 	Synacor Challenge
 	Author: Anthony Nool (AnthonyN1)
-	Virtual Machine Implementation
+	Virtual Machine Constructors Implementation
 */
 
 #include <cstdint>
