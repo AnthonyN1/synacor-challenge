@@ -24,10 +24,6 @@ VirtualMachine::VirtualMachine(const char* filename){
 	} catch(const std::invalid_argument &e){
 		throw;
 	}
-
-	programCounter_ = 0;
-	stackSize_ = MIN_STACK_SIZE;
-	stack_ = new uint16_t[stackSize_];
 }
 
 /**
@@ -48,20 +44,8 @@ VirtualMachine::VirtualMachine(const VirtualMachine &vm) noexcept {
  *
  */
 VirtualMachine & VirtualMachine::operator=(const VirtualMachine &vm) noexcept {
-	if(this != &vm){
-		delete [] stack_;
-		copy(vm);
-	}
-
+	if(this != &vm) copy(vm);
 	return *this;
-}
-
-/**
- * Deletes and dynamically-allocated memory stored in this object.
- *
- */
-VirtualMachine::~VirtualMachine() noexcept {
-	delete [] stack_;
 }
 
 
@@ -75,7 +59,5 @@ void VirtualMachine::copy(const VirtualMachine &vm) noexcept {
 	programCounter_ = vm.programCounter_;
 	for(unsigned int i = 0; i < MEMORY_SIZE; ++i) memory_[i] = vm.memory_[i];
 	for(unsigned int i = 0; i < NUM_REGISTERS; ++i) registers_[i] = vm.registers_[i];
-	stackSize_ = vm.stackSize_;
-	stack_ = new uint16_t[stackSize_];
-	for(unsigned int i = 0; i < stackSize_; ++i) stack_[i] = vm.stack_[i];
+	stack_ = vm.stack_;
 }
